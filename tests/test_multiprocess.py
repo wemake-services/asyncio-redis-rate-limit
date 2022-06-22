@@ -12,7 +12,7 @@ from aio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
 _redis: Final = AsyncRedis.from_url(
     'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
 )
-_event_loop: Final = asyncio.get_event_loop()
+_event_loop: Final = asyncio.new_event_loop()
 _LIMIT: Final = 5
 _SECONDS: Final = 1
 
