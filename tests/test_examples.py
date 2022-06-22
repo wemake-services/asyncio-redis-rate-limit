@@ -101,6 +101,36 @@ async def test_with_sleep(
     await function()
 
 
+@pytest.mark.freeze_time()
+async def test_different_functions(
+    limited: _LimitedCallback,
+    redis: 'AsyncRedis[Any]',
+) -> None:
+    """Ensure that unrelated functions are unrelated."""
+    @rate_limit(
+        rate_spec=RateSpec(requests=5, seconds=1),
+        backend=redis,
+    )
+    async def factory(index: int = 0) -> int:
+        return index
+
+    for attempt in range(_LIMIT):
+        await factory(attempt)
+
+    # Next attempt will raise:
+    with pytest.raises(RateLimitError):
+        await factory()
+
+    # Unrelated function should be fine:
+    factory2 = limited()
+    for attempt2 in range(5):
+        await factory2(attempt2)
+
+    # Next attempt will raise:
+    with pytest.raises(RateLimitError):
+        await factory2()
+
+
 @pytest.mark.repeat(3)
 async def test_gather_correct(limited: _LimitedCallback) -> None:
     """Ensure that several gathered coroutines do respect the rate limit."""
