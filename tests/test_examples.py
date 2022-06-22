@@ -1,7 +1,7 @@
 import asyncio
 import datetime as dt
 import os
-from typing import AsyncGenerator, Awaitable, Any
+from typing import Any, AsyncGenerator, Awaitable
 
 import pytest
 from redis.asyncio import Redis as AsyncRedis
