@@ -1,7 +1,7 @@
 import asyncio
 import datetime as dt
 import os
-from typing import AsyncGenerator, Awaitable
+from typing import AsyncGenerator, Awaitable, Any
 
 import pytest
 from redis.asyncio import Redis as AsyncRedis
@@ -29,7 +29,7 @@ _SECONDS: Final = 1
 
 
 @pytest.fixture()
-async def redis() -> AsyncRedis:
+async def redis() -> 'AsyncRedis[Any]':
     """Creates an async redis client."""
     return AsyncRedis.from_url(
         'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
@@ -37,14 +37,14 @@ async def redis() -> AsyncRedis:
 
 
 @pytest.fixture(autouse=True)
-async def _clear_redis(redis: AsyncRedis) -> AsyncGenerator[None, None]:
+async def _clear_redis(redis: 'AsyncRedis[Any]') -> AsyncGenerator[None, None]:
     """This fixture is needed to be sure that test start with fresh redis."""
     yield
     await redis.flushdb()
 
 
 @pytest.fixture()
-def limited(redis: AsyncRedis) -> _LimitedCallback:
+def limited(redis: 'AsyncRedis[Any]') -> _LimitedCallback:
     """Fixture to construct rate limited functions."""
     def factory(
         requests: int = _LIMIT,
@@ -56,7 +56,7 @@ def limited(redis: AsyncRedis) -> _LimitedCallback:
         )
         async def decorator(index: int = 0) -> int:
             return index
-        return decorator
+        return decorator  # type: ignore[return-value]
     return factory
 
 

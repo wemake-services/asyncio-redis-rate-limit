@@ -17,9 +17,9 @@ from redis.asyncio import Redis
 from typing_extensions import TypeAlias, final
 
 if TYPE_CHECKING:  # pragma: no cover
-    AsyncRedis = Redis[Any]
+    _AsyncRedis = Redis[Any]
 else:
-    AsyncRedis = Redis
+    _AsyncRedis = Redis
 
 #: This makes our code more readable.
 _Seconds: TypeAlias = int
@@ -64,7 +64,7 @@ class RateLimiter(object):
         self,
         unique_key: str,
         rate_spec: RateSpec,
-        backend: AsyncRedis,
+        backend: _AsyncRedis,
         *,
         cache_prefix: str,
     ) -> None:
@@ -119,7 +119,7 @@ class RateLimiter(object):
 
 def rate_limit(
     rate_spec: RateSpec,
-    backend: AsyncRedis,
+    backend: _AsyncRedis,
     *,
     cache_prefix: str = 'aio-rate-limit',
 ) -> Callable[[_CoroutineFunction], _CoroutineFunction]:
