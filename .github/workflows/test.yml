@@ -36,6 +36,7 @@ jobs:
     - name: Install dependencies
       run: |
         poetry config virtualenvs.in-project true
+        poetry run pip install -U pip
         poetry install
 
     - name: Pull and build docker-compose services
