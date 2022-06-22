@@ -35,7 +35,7 @@ def _worker(number: int) -> int:
     return _event_loop.run_until_complete(_limited(number))
 
 
-def test_multiprocess() -> None:
+def test_multiprocess(event_loop: asyncio.BaseEventLoop) -> None:
     """Ensure that `multiprocessing` works with limits."""
     with multiprocessing.Pool() as pool:
         reduced = pool.map(_worker, list(range(_LIMIT)))
