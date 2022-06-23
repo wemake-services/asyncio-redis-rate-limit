@@ -4,9 +4,10 @@ import os
 import time
 
 import pytest
-from aio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
 from redis.asyncio import Redis as AsyncRedis
 from typing_extensions import Final
+
+from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
 
 _redis: Final = AsyncRedis.from_url(
     'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
