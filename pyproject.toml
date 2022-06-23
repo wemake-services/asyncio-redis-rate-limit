@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "asyncio-redis-rate-limit"
 description = "Rate limiter for async functions using Redis as a backend"
-version = "0.1.0"
+version = "0.1.1"
 license = "MIT"
 readme = "README.md"
 

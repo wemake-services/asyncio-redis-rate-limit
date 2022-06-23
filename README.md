@@ -1,9 +1,9 @@
-# aio-redis-rate-limit
+# asyncio-redis-rate-limit
 
 [![wemake.services](https://img.shields.io/badge/%20-wemake.services-green.svg?label=%20&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC%2FxhBQAAAAFzUkdCAK7OHOkAAAAbUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP%2F%2F%2F5TvxDIAAAAIdFJOUwAjRA8xXANAL%2Bv0SAAAADNJREFUGNNjYCAIOJjRBdBFWMkVQeGzcHAwksJnAPPZGOGAASzPzAEHEGVsLExQwE7YswCb7AFZSF3bbAAAAABJRU5ErkJggg%3D%3D)](https://wemake-services.github.io)
-[![Build Status](https://github.com/wemake-services/aio-redis-rate-limit/workflows/test/badge.svg?branch=master&event=push)](https://github.com/wemake-services/aio-redis-rate-limit/actions?query=workflow%3Atest)
-[![codecov](https://codecov.io/gh/wemake-services/aio-redis-rate-limit/branch/master/graph/badge.svg)](https://codecov.io/gh/wemake-services/aio-redis-rate-limit)
-[![Python Version](https://img.shields.io/pypi/pyversions/aio-redis-rate-limit.svg)](https://pypi.org/project/aio-redis-rate-limit/)
+[![Build Status](https://github.com/wemake-services/asyncio-redis-rate-limit/workflows/test/badge.svg?branch=master&event=push)](https://github.com/wemake-services/asyncio-redis-rate-limit/actions?query=workflow%3Atest)
+[![codecov](https://codecov.io/gh/wemake-services/asyncio-redis-rate-limit/branch/master/graph/badge.svg)](https://codecov.io/gh/wemake-services/asyncio-redis-rate-limit)
+[![Python Version](https://img.shields.io/pypi/pyversions/asyncio-redis-rate-limit.svg)](https://pypi.org/project/asyncio-redis-rate-limit/)
 [![wemake-python-styleguide](https://img.shields.io/badge/style-wemake-000000.svg)](https://github.com/wemake-services/wemake-python-styleguide)
 
 Rate limiter for async functions using Redis as a backend.
@@ -23,7 +23,7 @@ Rate limiter for async functions using Redis as a backend.
 ## Installation
 
 ```bash
-pip install aio-redis-rate-limit
+pip install asyncio-redis-rate-limit
 ```
 
 
@@ -65,7 +65,7 @@ Or as a context manager:
 
 ## License
 
-[MIT](https://github.com/wemake-services/aio-redis-rate-limit/blob/master/LICENSE)
+[MIT](https://github.com/wemake-services/asyncio-redis-rate-limit/blob/master/LICENSE)
 
 
 ## Credits
