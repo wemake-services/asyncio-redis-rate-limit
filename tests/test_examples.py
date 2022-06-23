@@ -130,6 +130,39 @@ async def test_different_functions(
         await factory2()
 
 
+async def test_different_prefixes(redis: 'AsyncRedis[Any]') -> None:
+    """Ensure that different prefixes work for the same function."""
+    async def factory(index: int = 0) -> int:
+        return index
+
+    limited1 = rate_limit(
+        rate_spec=RateSpec(requests=5, seconds=1),
+        backend=redis,
+        cache_prefix='one',
+    )(factory)
+
+    for attempt in range(_LIMIT):
+        await limited1(attempt)
+
+    # Next attempt will raise:
+    with pytest.raises(RateLimitError):
+        await limited1()
+
+    # Different prefix should be fine:
+    limited2 = rate_limit(
+        rate_spec=RateSpec(requests=5, seconds=1),
+        backend=redis,
+        cache_prefix='two',
+    )(factory)
+
+    for attempt2 in range(5):
+        await limited2(attempt2)
+
+    # Next attempt will raise:
+    with pytest.raises(RateLimitError):
+        await limited2()
+
+
 @pytest.mark.repeat(3)
 async def test_gather_correct(limited: _LimitedCallback) -> None:
     """Ensure that several gathered coroutines do respect the rate limit."""
