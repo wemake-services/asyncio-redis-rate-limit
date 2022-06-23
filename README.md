@@ -30,7 +30,7 @@ pip install aio-redis-rate-limit
 ## Example
 
 ```python
->>> from aio_redis_rate_limit import rate_limit, RateSpec
+>>> from asyncio_redis_rate_limit import rate_limit, RateSpec
 >>> from redis.asyncio import Redis as AsyncRedis  # pip install redis
 
 >>> redis = AsyncRedis.from_url('redis://localhost:6379')
@@ -47,7 +47,7 @@ pip install aio-redis-rate-limit
 Or as a context manager:
 
 ```python
->>> from aio_redis_rate_limit import RateLimiter, RateSpec
+>>> from asyncio_redis_rate_limit import RateLimiter, RateSpec
 >>> from redis.asyncio import Redis as AsyncRedis  # pip install redis
 
 >>> redis = AsyncRedis.from_url('redis://localhost:6379')

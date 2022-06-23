@@ -6,7 +6,7 @@ import pytest
 from redis.asyncio import Redis as AsyncRedis
 from typing_extensions import Final, Protocol
 
-from aio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
+from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
 
 
 class _LimitedSig(Protocol):

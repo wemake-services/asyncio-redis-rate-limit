@@ -133,7 +133,7 @@ def rate_limit(
 
       .. code:: python
 
-        >>> from aio_redis_rate_limit import rate_limit, RateSpec
+        >>> from asyncio_redis_rate_limit import rate_limit, RateSpec
         >>> from redis.asyncio import Redis as AsyncRedis
 
         >>> redis = AsyncRedis.from_url('redis://localhost:6379')
