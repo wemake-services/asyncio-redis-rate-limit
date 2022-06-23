@@ -1,5 +1,4 @@
 import asyncio
-import datetime as dt
 import os
 from typing import Any, AsyncGenerator, Awaitable
 
@@ -71,6 +70,7 @@ async def test_correct(limited: _LimitedCallback) -> None:
     with pytest.raises(RateLimitError):
         await function()
 
+#: Freezing time on a client won't help, server's time is important.
 test_correct_frozen = pytest.mark.freeze_time('2020-02-03')(test_correct)
 
 
@@ -95,13 +95,12 @@ async def test_with_sleep(
         await function()
 
     # Sleep for a while:
-    await asyncio.sleep(seconds)
+    await asyncio.sleep(seconds + 0.5)  # for extra safety
 
     # Next attempt will not raise, since some time has passed:
     await function()
 
 
-@pytest.mark.freeze_time()
 async def test_different_functions(
     limited: _LimitedCallback,
     redis: 'AsyncRedis[Any]',
@@ -157,7 +156,6 @@ async def test_gather_limited(limited: _LimitedCallback) -> None:
 @pytest.mark.repeat(5)
 async def test_ten_reqs_in_two_secs(
     limited: _LimitedCallback,
-    freezer,
 ) -> None:
     """Ensure that several gathered coroutines do respect the rate limit."""
     function = limited(requests=10, seconds=2)
@@ -167,7 +165,7 @@ async def test_ten_reqs_in_two_secs(
         await function(attempt)
 
     # Now, let's move time to the next second:
-    freezer.move_to(dt.timedelta(seconds=1))
+    await asyncio.sleep(1)
 
     # Other 5 should be fine:
     for attempt2 in range(5):
@@ -181,7 +179,6 @@ async def test_ten_reqs_in_two_secs(
 @pytest.mark.repeat(5)
 async def test_ten_reqs_in_two_secs2(
     limited: _LimitedCallback,
-    freezer,
 ) -> None:
     """Ensure that several gathered coroutines do respect the rate limit."""
     function = limited(requests=10, seconds=2)
@@ -195,8 +192,12 @@ async def test_ten_reqs_in_two_secs2(
         await function()
 
     # Now, let's move time to the next second:
-    freezer.move_to(dt.timedelta(seconds=1))
+    await asyncio.sleep(1)
 
     # This one will also fail:
     with pytest.raises(RateLimitError):
         await function()
+
+    # Next attempts will pass:
+    await asyncio.sleep(1 + 0.5)
+    await function()

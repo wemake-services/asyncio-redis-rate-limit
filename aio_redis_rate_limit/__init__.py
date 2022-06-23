@@ -2,24 +2,11 @@ import asyncio
 import hashlib
 from functools import wraps
 from types import TracebackType
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Awaitable,
-    Callable,
-    NamedTuple,
-    Optional,
-    Type,
-    TypeVar,
-)
+from typing import Any, Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
 
-from redis.asyncio import Redis
+from redis.asyncio.client import Pipeline
+from redis.asyncio.client import Redis as AsyncRedis
 from typing_extensions import TypeAlias, final
-
-if TYPE_CHECKING:  # pragma: no cover
-    _AsyncRedis = Redis[Any]
-else:
-    _AsyncRedis = Redis
 
 #: This makes our code more readable.
 _Seconds: TypeAlias = int
@@ -64,7 +51,7 @@ class RateLimiter(object):
         self,
         unique_key: str,
         rate_spec: RateSpec,
-        backend: _AsyncRedis,
+        backend: 'AsyncRedis[Any]',
         *,
         cache_prefix: str,
     ) -> None:
@@ -96,7 +83,7 @@ class RateLimiter(object):
     # Private API:
 
     async def _acquire(self) -> None:
-        cache_key = _make_cache_key(
+        cache_key = self._make_cache_key(
             unique_key=self._unique_key,
             rate_spec=self._rate_spec,
             cache_prefix=self._cache_prefix,
@@ -104,22 +91,40 @@ class RateLimiter(object):
         pipeline = self._backend.pipeline()
 
         async with self._lock:
-            # https://redis.io/commands/incr/#pattern-rate-limiter-1
-            pipeline.incr(cache_key)  # type: ignore[unused-coroutine]
-            pipeline.expire(  # type: ignore[unused-coroutine]
-                cache_key,
-                self._rate_spec.seconds,
-                nx=True,
-            )
-            current_rate, _expire = await pipeline.execute()
-
+            current_rate = await self._run_pipeline(cache_key, pipeline)
             if current_rate > self._rate_spec.requests:
                 raise RateLimitError('Rate limit is hit', current_rate)
+
+    async def _run_pipeline(
+        self,
+        cache_key: str,
+        pipeline: 'Pipeline[Any]',
+    ) -> int:
+        # https://redis.io/commands/incr/#pattern-rate-limiter-1
+        current_rate, _expire = await pipeline.incr(
+            cache_key,
+        ).expire(  # type: ignore[attr-defined]
+            cache_key,
+            self._rate_spec.seconds,
+            nx=True,
+        ).execute()
+        return current_rate
+
+    def _make_cache_key(
+        self,
+        unique_key: str,
+        rate_spec: RateSpec,
+        cache_prefix: str,
+    ) -> str:
+        parts = ''.join([unique_key, str(rate_spec)])
+        return cache_prefix + hashlib.md5(  # noqa: S303
+            parts.encode('utf-8'),
+        ).hexdigest()
 
 
 def rate_limit(
     rate_spec: RateSpec,
-    backend: _AsyncRedis,
+    backend: 'AsyncRedis[Any]',
     *,
     cache_prefix: str = 'aio-rate-limit',
 ) -> Callable[[_CoroutineFunction], _CoroutineFunction]:
@@ -155,14 +160,3 @@ def rate_limit(
                 return await function(*args, **kwargs)
         return factory  # type: ignore[return-value]
     return decorator
-
-
-def _make_cache_key(
-    unique_key: str,
-    rate_spec: RateSpec,
-    cache_prefix: str,
-) -> str:
-    parts = ''.join([unique_key, str(rate_spec)])
-    return cache_prefix + hashlib.md5(  # noqa: S303
-        parts.encode('utf-8'),
-    ).hexdigest()
