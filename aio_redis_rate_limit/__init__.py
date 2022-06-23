@@ -101,9 +101,7 @@ class RateLimiter(object):
         pipeline: 'Pipeline[Any]',
     ) -> int:
         # https://redis.io/commands/incr/#pattern-rate-limiter-1
-        current_rate, _expire = await pipeline.incr(
-            cache_key,
-        ).expire(  # type: ignore[attr-defined]
+        current_rate, _ = await pipeline.incr(cache_key).expire(  # type: ignore
             cache_key,
             self._rate_spec.seconds,
             nx=True,

@@ -44,6 +44,24 @@ pip install aio-redis-rate-limit
 
 ```
 
+Or as a context manager:
+
+```python
+>>> from aio_redis_rate_limit import RateLimiter, RateSpec
+>>> from redis.asyncio import Redis as AsyncRedis  # pip install redis
+
+>>> redis = AsyncRedis.from_url('redis://localhost:6379')
+
+>>> async def request() -> ...:
+...     async with RateLimiter(
+...         unique_key='api-name.com',
+...         backend=redis,
+...         rate_spec=RateSpec(requests=5, seconds=1),
+...     ):
+...         ...  # Do the request itself.
+
+```
+
 
 ## License
 
