@@ -9,7 +9,7 @@ authors = [
   "Nikita Sobolev <mail@sobolevn.me>"
 ]
 
-repository = "https://github.com/wemake-services/aio-redis-rate-limit"
+repository = "https://github.com/wemake-services/asyncio-redis-rate-limit"
 
 keywords = [
   "asyncio",
