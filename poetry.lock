@@ -852,7 +852,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-redis"
-version = "4.3.1"
+version = "4.3.2"
 description = "Typing stubs for redis"
 category = "dev"
 optional = false
@@ -924,7 +924,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "2034c5f02da2efe863039388edcac57a83ebfe0ee98e22259284224c2b8e9833"
+content-hash = "4a3084067c13377c1bf1a65479c483e0f01ccb3d42c0c2f22a9bb8e2ca93820a"
 
 [metadata.files]
 appdirs = [
@@ -1256,6 +1256,10 @@ restructuredtext-lint = [
     {file = "ruamel.yaml-0.17.21.tar.gz", hash = "sha256:8b7ce697a2f212752a35c1ac414471dc16c424c9573be4926b56ff3f5d23b7af"},
 ]
 "ruamel.yaml.clib" = [
+    {file = "ruamel.yaml.clib-0.2.6-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:6e7be2c5bcb297f5b82fee9c665eb2eb7001d1050deaba8471842979293a80b0"},
+    {file = "ruamel.yaml.clib-0.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl", hash = "sha256:221eca6f35076c6ae472a531afa1c223b9c29377e62936f61bc8e6e8bdc5f9e7"},
+    {file = "ruamel.yaml.clib-0.2.6-cp310-cp310-win32.whl", hash = "sha256:1070ba9dd7f9370d0513d649420c3b362ac2d687fe78c6e888f5b12bf8bc7bee"},
+    {file = "ruamel.yaml.clib-0.2.6-cp310-cp310-win_amd64.whl", hash = "sha256:77df077d32921ad46f34816a9a16e6356d8100374579bc35e15bab5d4e9377de"},
     {file = "ruamel.yaml.clib-0.2.6-cp35-cp35m-macosx_10_6_intel.whl", hash = "sha256:cfdb9389d888c5b74af297e51ce357b800dd844898af9d4a547ffc143fa56751"},
     {file = "ruamel.yaml.clib-0.2.6-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:7b2927e92feb51d830f531de4ccb11b320255ee95e791022555971c466af4527"},
     {file = "ruamel.yaml.clib-0.2.6-cp35-cp35m-win32.whl", hash = "sha256:ada3f400d9923a190ea8b59c8f60680c4ef8a4b0dfae134d2f2ff68429adfab5"},
@@ -1345,8 +1349,8 @@ types-mock = [
     {file = "types_mock-4.0.15-py3-none-any.whl", hash = "sha256:4535fbb3912b88a247d43cdb41db0c8b2e187138986f6f01a989717e56105848"},
 ]
 types-redis = [
-    {file = "types-redis-4.3.1.tar.gz", hash = "sha256:506968ce674d775367cfd1b34b54dca68b1111dfdb930150d3accda95ec5703a"},
-    {file = "types_redis-4.3.1-py3-none-any.whl", hash = "sha256:001d8ecb8bcf237e92407ad37f71c598c13bf069a8a78adbe0f6bbc0118b5722"},
+    {file = "types-redis-4.3.2.tar.gz", hash = "sha256:a193508faa68c53dec45cc30515eab94c331325af8a0c3c80095f60f2ab6daa6"},
+    {file = "types_redis-4.3.2-py3-none-any.whl", hash = "sha256:6c2772dcf9abd611dfdecf92afeb9e9128bab66ab0c9b61517fac5c6d7c5d81e"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.2.0-py3-none-any.whl", hash = "sha256:6657594ee297170d19f67d55c05852a874e7eb634f4f753dbd667855e07c1708"},
