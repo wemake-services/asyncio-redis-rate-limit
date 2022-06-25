@@ -29,6 +29,8 @@ pip install asyncio-redis-rate-limit
 
 ## Example
 
+As a decorator:
+
 ```python
 >>> from asyncio_redis_rate_limit import rate_limit, RateSpec
 >>> from redis.asyncio import Redis as AsyncRedis  # pip install redis
@@ -39,7 +41,7 @@ pip install asyncio-redis-rate-limit
 ...    rate_spec=RateSpec(requests=1200, seconds=60),
 ...    backend=redis,
 ... )
-... async def request() -> int:
+... async def request() -> ...:
 ...     ...   # Do something useful! Call this function as usual.
 
 ```
