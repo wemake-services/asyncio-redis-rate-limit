@@ -32,6 +32,7 @@ def event_loop() -> asyncio.AbstractEventLoop:
 @rate_limit(
     rate_spec=RateSpec(requests=_LIMIT, seconds=_SECONDS),
     backend=_redis,
+    cache_prefix='mp-aioredis',
 )
 async def _limited(index: int) -> int:
     return index
