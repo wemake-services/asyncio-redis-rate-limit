@@ -13,7 +13,7 @@ from asyncio_redis_rate_limit.compat import (  # type: ignore  # noqa: WPS450
 )
 
 if not HAS_REDIS:
-    pytest.skip('`redis` package is not installed')
+    pytest.skip('`redis` package is not installed', allow_module_level=True)
 
 _redis: Final = _AsyncRedis.from_url(
     'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
