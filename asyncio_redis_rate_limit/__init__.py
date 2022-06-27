@@ -4,9 +4,13 @@ from functools import wraps
 from types import TracebackType
 from typing import Any, Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
 
-from redis.asyncio.client import Pipeline
-from redis.asyncio.client import Redis as AsyncRedis
 from typing_extensions import TypeAlias, final
+
+from asyncio_redis_rate_limit.compat import (
+    AnyPipeline,
+    AnyRedis,
+    pipeline_expire,
+)
 
 #: This makes our code more readable.
 _Seconds: TypeAlias = int
@@ -51,7 +55,7 @@ class RateLimiter(object):
         self,
         unique_key: str,
         rate_spec: RateSpec,
-        backend: 'AsyncRedis[Any]',
+        backend: AnyRedis,
         *,
         cache_prefix: str,
     ) -> None:
@@ -98,13 +102,13 @@ class RateLimiter(object):
     async def _run_pipeline(
         self,
         cache_key: str,
-        pipeline: 'Pipeline[Any]',
+        pipeline: AnyPipeline,
     ) -> int:
         # https://redis.io/commands/incr/#pattern-rate-limiter-1
-        current_rate, _ = await pipeline.incr(cache_key).expire(  # type: ignore
+        current_rate, _ = await pipeline_expire(
+            pipeline.incr(cache_key),
             cache_key,
             self._rate_spec.seconds,
-            nx=True,
         ).execute()
         return current_rate
 
@@ -122,7 +126,7 @@ class RateLimiter(object):
 
 def rate_limit(
     rate_spec: RateSpec,
-    backend: 'AsyncRedis[Any]',
+    backend: AnyRedis,
     *,
     cache_prefix: str = 'aio-rate-limit',
 ) -> Callable[[_CoroutineFunction], _CoroutineFunction]:

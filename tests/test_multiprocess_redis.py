@@ -4,12 +4,18 @@ import os
 import time
 
 import pytest
-from redis.asyncio import Redis as AsyncRedis
 from typing_extensions import Final
 
 from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
+from asyncio_redis_rate_limit.compat import (  # type: ignore  # noqa: WPS450
+    HAS_REDIS,
+    _AsyncRedis,
+)
 
-_redis: Final = AsyncRedis.from_url(
+if not HAS_REDIS:
+    pytest.skip('`redis` package is not installed')
+
+_redis: Final = _AsyncRedis.from_url(
     'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
 )
 _event_loop: Final = asyncio.new_event_loop()
