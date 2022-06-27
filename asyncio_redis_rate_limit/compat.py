@@ -41,13 +41,18 @@ AnyRedis: TypeAlias = Union['_AsyncRedis[Any]', _AIORedis]
 
 
 def pipeline_expire(
-    pipeline: AnyPipeline,
+    pipeline: Any,
     cache_key: str,
     seconds: int,
 ) -> AnyPipeline:
     """Compatibility mode for `.expire(..., nx=True)` command."""
     if isinstance(pipeline, _AsyncPipeline):
-        return pipeline.expire(cache_key, seconds, nx=True)
+        return pipeline.expire(cache_key, seconds, nx=True)  # type: ignore
     # `aioredis` somehow does not have this boolean argument in `.expire`,
     # so, we use `EXPIRE` directly with `NX` flag.
-    return pipeline.execute_command('EXPIRE', cache_key, seconds, 'NX')
+    return pipeline.execute_command(  # type: ignore
+        'EXPIRE',
+        cache_key,
+        seconds,
+        'NX',
+    )
