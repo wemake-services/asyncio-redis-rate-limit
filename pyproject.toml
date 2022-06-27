@@ -57,7 +57,7 @@ types-mock = "^4.0.15"
 
 [tool.poetry.extras]
 redis = ["redis"]
-aioredis = ["airedis"]
+aioredis = ["aioredis"]
 dev = ["redis", "aioredis"]
 
 
