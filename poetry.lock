@@ -937,14 +937,14 @@ docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-aioredis = []
+aioredis = ["aioredis"]
 dev = ["redis", "aioredis"]
 redis = ["redis"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e8c05ae7d3cdbab8a95f16238129fc8fc5bbdd4b33e566ed318b2c422a8a2ea3"
+content-hash = "33f713b1d9d1229c1c8bc16e4b82d6ed1c67022ddf22260bc81fb7d5a8cbb0b3"
 
 [metadata.files]
 aioredis = [
