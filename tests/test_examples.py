@@ -1,12 +1,18 @@
 import asyncio
 import os
-from typing import Any, AsyncGenerator, Awaitable
+from typing import AsyncGenerator, Awaitable
 
 import pytest
-from redis.asyncio import Redis as AsyncRedis
 from typing_extensions import Final, Protocol
 
 from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
+from asyncio_redis_rate_limit.compat import (  # type: ignore  # noqa: WPS450
+    HAS_AIOREDIS,
+    HAS_REDIS,
+    AnyRedis,
+    _AIORedis,
+    _AsyncRedis,
+)
 
 
 class _LimitedSig(Protocol):
@@ -27,23 +33,28 @@ _LIMIT: Final = 5
 _SECONDS: Final = 1
 
 
-@pytest.fixture()
-async def redis() -> 'AsyncRedis[Any]':
+@pytest.fixture(params=[_AsyncRedis, _AIORedis])
+async def redis(request) -> AnyRedis:
     """Creates an async redis client."""
-    return AsyncRedis.from_url(
+    if issubclass(request.param, _AsyncRedis) and not HAS_REDIS:
+        pytest.skip('`redis` is not installed')
+    elif issubclass(request.param, _AIORedis) and not HAS_AIOREDIS:
+        pytest.skip('`aioredis` is not installed')
+
+    return request.param.from_url(
         'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
     )
 
 
 @pytest.fixture(autouse=True)
-async def _clear_redis(redis: 'AsyncRedis[Any]') -> AsyncGenerator[None, None]:
+async def _clear_redis(redis: AnyRedis) -> AsyncGenerator[None, None]:
     """This fixture is needed to be sure that test start with fresh redis."""
     yield
     await redis.flushdb()
 
 
 @pytest.fixture()
-def limited(redis: 'AsyncRedis[Any]') -> _LimitedCallback:
+def limited(redis: AnyRedis) -> _LimitedCallback:
     """Fixture to construct rate limited functions."""
     def factory(
         requests: int = _LIMIT,
@@ -103,7 +114,7 @@ async def test_with_sleep(
 
 async def test_different_functions(
     limited: _LimitedCallback,
-    redis: 'AsyncRedis[Any]',
+    redis: AnyRedis,
 ) -> None:
     """Ensure that unrelated functions are unrelated."""
     @rate_limit(
@@ -130,7 +141,7 @@ async def test_different_functions(
         await factory2()
 
 
-async def test_different_prefixes(redis: 'AsyncRedis[Any]') -> None:
+async def test_different_prefixes(redis: AnyRedis) -> None:
     """Ensure that different prefixes work for the same function."""
     async def factory(index: int = 0) -> int:
         return index

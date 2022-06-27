@@ -4,12 +4,18 @@ import os
 import time
 
 import pytest
-from redis.asyncio import Redis as AsyncRedis
 from typing_extensions import Final
 
 from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
+from asyncio_redis_rate_limit.compat import (  # type: ignore  # noqa: WPS450
+    HAS_AIOREDIS,
+    _AIORedis,
+)
 
-_redis: Final = AsyncRedis.from_url(
+if not HAS_AIOREDIS:
+    pytest.skip('`aioredis` package is not installed', allow_module_level=True)
+
+_redis: Final = _AIORedis.from_url(
     'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
 )
 _event_loop: Final = asyncio.new_event_loop()
@@ -26,6 +32,7 @@ def event_loop() -> asyncio.AbstractEventLoop:
 @rate_limit(
     rate_spec=RateSpec(requests=_LIMIT, seconds=_SECONDS),
     backend=_redis,
+    cache_prefix='mp-aioredis',
 )
 async def _limited(index: int) -> int:
     return index
