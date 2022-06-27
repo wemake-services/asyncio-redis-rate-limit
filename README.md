@@ -27,6 +27,10 @@ Rate limiter for async functions using Redis as a backend.
 pip install asyncio-redis-rate-limit
 ```
 
+Extras available:
+- `pip install asyncio-redis-rate-limit[redis]`
+- `pip install asyncio-redis-rate-limit[aioredis]`
+
 
 ## Example
 

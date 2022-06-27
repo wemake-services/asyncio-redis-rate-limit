@@ -38,7 +38,7 @@ jobs:
     - name: Install dependencies
       run: |
         poetry config virtualenvs.in-project true
-        poetry run pip install -U pip
+        poetry run pip install -U pip 'setuptools<60.9'
         poetry install --extras=${{ matrix.env-type }}
 
     - name: Pull and build docker-compose services
