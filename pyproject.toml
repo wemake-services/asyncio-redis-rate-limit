@@ -39,9 +39,8 @@ typing-extensions = ">=3.10"
 mypy = "^0.961"
 types-redis = "^4.3"
 
-# TODO: return after GitHub Actions is fixed
-# wemake-python-styleguide = "^0.16"
-# flake8-pytest-style = "^1.6"
+wemake-python-styleguide = "^0.16"
+flake8-pytest-style = "^1.6"
 doc8 = "^0.11"
 nitpick = "^0.32"
 
