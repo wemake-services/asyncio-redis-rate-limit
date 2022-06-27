@@ -53,6 +53,7 @@ jobs:
       if: ${{ matrix.env-type }} == 'dev'
       run: |
         poetry run pytest \
+          -p no:cov -o addopts="" \
           --doctest-modules --doctest-glob='*.md' \
           asyncio_redis_rate_limit README.md
 
