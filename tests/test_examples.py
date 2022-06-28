@@ -265,11 +265,12 @@ async def test_that_rate_limit_do_not_cancel_others(redis: AnyRedis) -> None:
         cache_prefix='one',
     )(counter.increment)
 
-    with pytest.raises(RateLimitError):
-        await asyncio.gather(*[
-            limited()
-            for _attempt in range(_LIMIT + 1)  # We go over the top.
-        ])
+    for attempt in range(_LIMIT + 1):
+        if attempt == _LIMIT:
+            with pytest.raises(RateLimitError):
+                await limited()
+        else:
+            await limited()
 
     # But, we still do this work while rate limit is not met:
-    assert counter.count == 5
+    assert counter.count == _LIMIT
