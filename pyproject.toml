@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "asyncio-redis-rate-limit"
 description = "Rate limiter for async functions using Redis as a backend"
-version = "0.1.1"
+version = "0.2.0"
 license = "MIT"
 readme = "README.md"
 
@@ -13,12 +13,10 @@ repository = "https://github.com/wemake-services/asyncio-redis-rate-limit"
 
 keywords = [
   "asyncio",
-  "trio",
-  "curio",
   "rate-limiter",
   "redis",
   "redis-py",
-  "anyio",
+  "aioredis",
 ]
 
 classifiers = [
@@ -38,6 +36,7 @@ typing-extensions = ">=3.10"
 [tool.poetry.dev-dependencies]
 mypy = "^0.961"
 types-redis = "^4.3"
+types-mock = "^4.0"
 
 wemake-python-styleguide = "^0.16"
 flake8-pytest-style = "^1.6"
@@ -52,7 +51,6 @@ pytest-randomly = "^3.12"
 pytest-asyncio = "^0.18"
 pytest-freezegun = "^0.4"
 pytest-repeat = "^0.9"
-types-mock = "^4.0.15"
 
 [tool.poetry.extras]
 redis = ["redis"]
