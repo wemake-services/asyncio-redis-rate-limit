@@ -245,3 +245,31 @@ async def test_ten_reqs_in_two_secs2(
     # Next attempts will pass:
     await asyncio.sleep(1 + 0.5)
     await function()
+
+
+class _Counter(object):
+    def __init__(self) -> None:
+        self.count = 0
+
+    async def increment(self) -> None:
+        self.count += 1
+
+
+@pytest.mark.repeat(5)
+async def test_that_rate_limit_do_not_cancel_others(redis: AnyRedis) -> None:
+    """Ensure that when rate limit is hit, we still execute other requests."""
+    counter = _Counter()
+    limited = rate_limit(
+        rate_spec=RateSpec(requests=_LIMIT, seconds=2),
+        backend=redis,
+        cache_prefix='one',
+    )(counter.increment)
+
+    with pytest.raises(RateLimitError):
+        await asyncio.gather(*[
+            limited()
+            for _attempt in range(_LIMIT + 1)  # We go over the top.
+        ])
+
+    # But, we still do this work while rate limit is not met:
+    assert counter.count == 5
