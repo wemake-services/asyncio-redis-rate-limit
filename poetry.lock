@@ -1184,7 +1184,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-redis"
-version = "4.3.6"
+version = "4.3.7"
 description = "Typing stubs for redis"
 category = "dev"
 optional = false
@@ -1826,8 +1826,8 @@ types-mock = [
     {file = "types_mock-4.0.15-py3-none-any.whl", hash = "sha256:4535fbb3912b88a247d43cdb41db0c8b2e187138986f6f01a989717e56105848"},
 ]
 types-redis = [
-    {file = "types-redis-4.3.6.tar.gz", hash = "sha256:079713f14f6adc886561e02d6ca9aa6857db8cbbc0c56f6c36eacfd547b66f7c"},
-    {file = "types_redis-4.3.6-py3-none-any.whl", hash = "sha256:2e943cb3476ca0d7a45b97955448541e053f6fec24bedd3d482883891e0c5822"},
+    {file = "types-redis-4.3.7.tar.gz", hash = "sha256:9f9711bffff816ff420678d829ea86f4beabc914b29c801f38053bdbfbb82575"},
+    {file = "types_redis-4.3.7-py3-none-any.whl", hash = "sha256:18457d49ba4a6880be123a90eb46408091176cd8611932833ef598c6c496af55"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02"},
