@@ -38,7 +38,7 @@ mypy = "^0.981"
 types-redis = "^4.3"
 types-mock = "^4.0"
 
-wemake-python-styleguide = "^0.16"
+wemake-python-styleguide = "^0.17"
 flake8-pytest-style = "^1.6"
 doc8 = "^1.0"
 nitpick = "^0.32"
