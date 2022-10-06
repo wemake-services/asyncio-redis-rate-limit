@@ -96,7 +96,8 @@ class RateLimiter(object):
 
         async with self._lock:
             current_rate = await self._run_pipeline(cache_key, pipeline)
-            if current_rate > self._rate_spec.requests:
+            # This looks like a coverage error on 3.10:
+            if current_rate > self._rate_spec.requests:  # pragma: no cover
                 raise RateLimitError('Rate limit is hit', current_rate)
 
     async def _run_pipeline(
