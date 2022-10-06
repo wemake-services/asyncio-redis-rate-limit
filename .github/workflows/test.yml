@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9']
+        python-version: ['3.7', '3.8', '3.9', '3.10']
         env-type: ['dev', 'redis', 'aioredis']
 
     steps:
@@ -38,7 +38,7 @@ jobs:
     - name: Install dependencies
       run: |
         poetry config virtualenvs.in-project true
-        poetry run pip install -U pip 'setuptools<60.9'
+        poetry run pip install -U pip
         poetry install --extras=${{ matrix.env-type }}
 
     - name: Pull and build docker-compose services
@@ -60,6 +60,6 @@ jobs:
     # Upload coverage to codecov: https://codecov.io/
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
-      if: ${{ matrix.env-type == 'dev' }}
+      if: ${{ matrix.python-version == '3.9' && matrix.env-type == 'dev' }}
       with:
         file: ./coverage.xml
