@@ -84,6 +84,10 @@ class RateLimiter(object):
     ) -> None:
         """Do nothing. We need this to ``__aenter__`` to work."""
 
+    async def redis_version(self):
+        version = await self._backend.info(section='SERVER')
+        return version['redis_version']
+
     # Private API:
 
     async def _acquire(self) -> None:
@@ -95,7 +99,18 @@ class RateLimiter(object):
         pipeline = self._backend.pipeline()
 
         async with self._lock:
-            current_rate = await self._run_pipeline(cache_key, pipeline)
+            redis_version = await self.redis_version()
+
+            if int(redis_version.split('.')[0]) < 7:
+                current_rate, *_ = await pipeline.incr(cache_key).execute()
+                if current_rate == 1:
+                    await pipeline.execute_command(
+                        'EXPIRE',
+                        cache_key,
+                        self._rate_spec.seconds,
+                    ).execute()
+            else:
+                current_rate = await self._run_pipeline(cache_key, pipeline)
             # This looks like a coverage error on 3.10:
             if current_rate > self._rate_spec.requests:  # pragma: no cover
                 raise RateLimitError('Rate limit is hit', current_rate)
