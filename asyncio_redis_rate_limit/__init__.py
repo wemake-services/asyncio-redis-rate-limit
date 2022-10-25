@@ -104,10 +104,9 @@ class RateLimiter(object):
             if int(redis_version.split('.')[0]) < 7:
                 current_rate, *_ = await pipeline.incr(cache_key).execute()
                 if current_rate == 1:
-                    await pipeline.execute_command(
-                        'EXPIRE',
+                    await pipeline.expire(
                         cache_key,
-                        self._rate_spec.seconds,
+                        self._rate_spec.seconds
                     ).execute()
             else:
                 current_rate = await self._run_pipeline(cache_key, pipeline)
