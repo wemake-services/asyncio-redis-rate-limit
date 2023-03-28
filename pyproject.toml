@@ -39,7 +39,7 @@ typing-extensions = ">=3.10"
 [tool.poetry.group.test.dependencies]
 mypy = "^0.982"
 types-redis = "^4.3"
-types-mock = "^4.0"
+types-mock = ">=4,<6"
 
 wemake-python-styleguide = "^0.17"
 flake8-pytest-style = "^1.6"
