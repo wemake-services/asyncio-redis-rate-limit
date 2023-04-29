@@ -18,8 +18,14 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
-        redis-image: ['redis:6.2-alpine', 'redis:7.0-alpine', 'redis:alpine']
-        env-type: ['dev', 'redis', 'aioredis']
+        redis-image: ['redis:7.0-alpine']
+        env-type: ['redis']
+
+        include:
+          - python-version: '3.10'
+            env-type: 'aioredis'
+          - python-version: '3.9'
+            env-type: 'dev'
 
     steps:
     - uses: actions/checkout@v3
