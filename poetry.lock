@@ -2061,4 +2061,4 @@ redis = ["redis"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "186872974dccb95aa9da353e991c333e33ccfc6ba6f08d7f77bc58d8daf1cc64"
+content-hash = "05c5dd799e75db43a43bcd66f0d9d1c47bc6fb0bd56ecb191dd73453a7c7d75c"
