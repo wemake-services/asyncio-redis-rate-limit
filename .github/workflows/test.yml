@@ -17,8 +17,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']
-        env-type: ['dev', 'redis', 'aioredis']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+        redis-image: ['redis:7.0-alpine']
+        env-type: ['redis']
+
+        include:
+          - python-version: '3.10'
+            env-type: 'aioredis'
+            redis-image: 'redis:7.0-alpine'
+          - python-version: '3.9'
+            env-type: 'dev'
+            redis-image: 'redis:7.0-alpine'
 
     steps:
     - uses: actions/checkout@v3
@@ -45,6 +54,8 @@ jobs:
       run: |
         docker-compose pull
         docker-compose up --detach
+      env:
+        REDIS_IMAGE: ${{ matrix.redis-image }}
 
     - name: Run checks
       run: make test
