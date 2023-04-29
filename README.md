@@ -18,6 +18,7 @@ Rate limiter for async functions using Redis as a backend.
 - Works with any amount of processes
 - Works with both [`redis.asyncio.client.Redis`](https://redis-py.readthedocs.io/en/stable/examples/asyncio_examples.html) and [`aioredis`](https://github.com/aio-libs/aioredis-py)
 - Free of race-conditions (hopefully!)
+- Supports `redis` since `6.2`
 - Fully typed with annotations and checked with mypy, [PEP561 compatible](https://www.python.org/dev/peps/pep-0561/)
 
 
