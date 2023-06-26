@@ -12,8 +12,7 @@ unit:
 .PHONY: package
 package:
 	poetry check
-	# TODO: enable when redis@4.5.5
-	# poetry run pip check
+	poetry run pip check
 	poetry run safety check --full-report || true
 
 .PHONY: test
