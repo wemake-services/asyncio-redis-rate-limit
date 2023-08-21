@@ -44,7 +44,7 @@ types-mock = "^5.0"
 
 wemake-python-styleguide = "^0.17"
 flake8-pytest-style = "^1.6"
-nitpick = "^0.33"
+nitpick = ">=0.33,<0.35"
 
 safety = "^2.3"
 
