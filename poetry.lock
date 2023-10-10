@@ -1389,17 +1389,17 @@ pytest = "*"
 
 [[package]]
 name = "pytest-repeat"
-version = "0.9.2"
+version = "0.9.3"
 description = "pytest plugin for repeating tests"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pytest-repeat-0.9.2.tar.gz", hash = "sha256:79673445ae99aee333b811c7d0037aeb408f933b8898375ff2f4fff1e3ba686b"},
-    {file = "pytest_repeat-0.9.2-py3-none-any.whl", hash = "sha256:05782f82b328311551c5929c50430e9103fed562354707db8511c392e8c798d0"},
+    {file = "pytest_repeat-0.9.3-py3-none-any.whl", hash = "sha256:26ab2df18226af9d5ce441c858f273121e92ff55f5bb311d25755b8d7abdd8ed"},
+    {file = "pytest_repeat-0.9.3.tar.gz", hash = "sha256:ffd3836dfcd67bb270bec648b330e20be37d2966448c4148c4092d1e8aba8185"},
 ]
 
 [package.dependencies]
-pytest = ">=3.6"
+pytest = "*"
 
 [[package]]
 name = "python-dateutil"
