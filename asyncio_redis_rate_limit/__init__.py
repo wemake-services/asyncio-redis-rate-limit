@@ -2,9 +2,9 @@ import asyncio
 import hashlib
 from functools import wraps
 from types import TracebackType
-from typing import Any, Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
+from typing import Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
 
-from typing_extensions import TypeAlias, final
+from typing_extensions import ParamSpec, TypeAlias, final
 
 from asyncio_redis_rate_limit.compat import (
     AnyPipeline,
@@ -12,13 +12,13 @@ from asyncio_redis_rate_limit.compat import (
     pipeline_expire,
 )
 
-#: This makes our code more readable.
+#: These aliases makes our code more readable.
 _Seconds: TypeAlias = int
 
-_CoroutineFunction = TypeVar(
-    '_CoroutineFunction',
-    bound=Callable[..., Awaitable[Any]],
-)
+_ResultT = TypeVar('_ResultT')
+_ParamsT = ParamSpec('_ParamsT')
+
+_CoroutineFunction: TypeAlias = Callable[_ParamsT, Awaitable[_ResultT]]
 
 _RateLimiterT = TypeVar('_RateLimiterT', bound='RateLimiter')
 
@@ -111,7 +111,7 @@ class RateLimiter(object):
             cache_key,
             self._rate_spec.seconds,
         ).execute()
-        return current_rate
+        return current_rate  # type: ignore[no-any-return]
 
     def _make_cache_key(
         self,
@@ -125,12 +125,15 @@ class RateLimiter(object):
         ).hexdigest()
 
 
-def rate_limit(
+def rate_limit(  # noqa: WPS320
     rate_spec: RateSpec,
     backend: AnyRedis,
     *,
     cache_prefix: str = 'aio-rate-limit',
-) -> Callable[[_CoroutineFunction], _CoroutineFunction]:
+) -> Callable[
+    [_CoroutineFunction[_ParamsT, _ResultT]],
+    _CoroutineFunction[_ParamsT, _ResultT],
+]:
     """
     Rate limits a function.
 
@@ -151,9 +154,14 @@ def rate_limit(
         ...     ...   # Do something
 
     """
-    def decorator(function: _CoroutineFunction) -> _CoroutineFunction:
+    def decorator(
+        function: _CoroutineFunction[_ParamsT, _ResultT],
+    ) -> _CoroutineFunction[_ParamsT, _ResultT]:
         @wraps(function)
-        async def factory(*args, **kwargs) -> Any:
+        async def factory(
+            *args: _ParamsT.args,
+            **kwargs: _ParamsT.kwargs,
+        ) -> _ResultT:
             async with RateLimiter(
                 unique_key=function.__qualname__,
                 backend=backend,
@@ -161,5 +169,5 @@ def rate_limit(
                 cache_prefix=cache_prefix,
             ):
                 return await function(*args, **kwargs)
-        return factory  # type: ignore[return-value]
+        return factory
     return decorator
