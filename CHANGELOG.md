@@ -2,6 +2,13 @@
 
 We follow [Semantic Versions](https://semver.org/).
 
+## WIP
+
+### Features
+
+- *breaking*: Removes `python3.8` support
+- Adds `python3.12` support
+
 
 ## Version 1.0.0
 

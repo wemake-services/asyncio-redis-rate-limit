@@ -111,7 +111,7 @@ class RateLimiter(object):
             cache_key,
             self._rate_spec.seconds,
         ).execute()
-        return current_rate
+        return current_rate  # type: ignore[no-any-return]
 
     def _make_cache_key(
         self,
@@ -131,8 +131,8 @@ def rate_limit(
     *,
     cache_prefix: str = 'aio-rate-limit',
 ) -> Callable[
-    [_CoroutineFunction[_ParamsT, Awaitable[_ResultT]]],
-    _CoroutineFunction[_ParamsT, Awaitable[_ResultT]],
+    [_CoroutineFunction[_ParamsT, _ResultT]],
+    _CoroutineFunction[_ParamsT, _ResultT],
 ]:
     """
     Rate limits a function.

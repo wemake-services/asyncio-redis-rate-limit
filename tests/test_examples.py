@@ -1,6 +1,6 @@
 import asyncio
 import os
-from typing import AsyncGenerator, Awaitable
+from typing import AsyncGenerator, Awaitable, cast
 
 import pytest
 from typing_extensions import Final, Protocol
@@ -34,16 +34,16 @@ _SECONDS: Final = 1
 
 
 @pytest.fixture(params=[_AsyncRedis, _AIORedis])
-async def redis(request) -> AnyRedis:
+async def redis(request: pytest.FixtureRequest) -> AnyRedis:
     """Creates an async redis client."""
     if issubclass(request.param, _AsyncRedis) and not HAS_REDIS:
         pytest.skip('`redis` is not installed')
     elif issubclass(request.param, _AIORedis) and not HAS_AIOREDIS:
         pytest.skip('`aioredis` is not installed')
 
-    return request.param.from_url(
+    return cast(AnyRedis, request.param.from_url(
         'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
-    )
+    ))
 
 
 @pytest.fixture(autouse=True)
