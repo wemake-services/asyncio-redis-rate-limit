@@ -2,7 +2,7 @@ import asyncio
 import hashlib
 from functools import wraps
 from types import TracebackType
-from typing import Any, Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
+from typing import Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
 
 from typing_extensions import ParamSpec, TypeAlias, final
 
@@ -125,7 +125,7 @@ class RateLimiter(object):
         ).hexdigest()
 
 
-def rate_limit(
+def rate_limit(  # noqa: WPS320
     rate_spec: RateSpec,
     backend: AnyRedis,
     *,
