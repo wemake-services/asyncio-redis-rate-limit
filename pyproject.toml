@@ -47,7 +47,7 @@ flake8-pytest-style = "^1.6"
 nitpick = "^0.35"
 
 pytest = "^8.0"
-pytest-cov = "^4.0"
+pytest-cov = ">=4,<6"
 pytest-randomly = "^3.12"
 pytest-asyncio = "^0.23"
 pytest-freezegun = "^0.4"
