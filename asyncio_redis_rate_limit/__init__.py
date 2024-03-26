@@ -40,7 +40,7 @@ class RateSpec(NamedTuple):
     seconds: _Seconds
 
 
-class RateLimiter(object):
+class RateLimiter:
     """Implements rate limiting."""
 
     __slots__ = (
