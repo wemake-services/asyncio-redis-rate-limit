@@ -247,7 +247,7 @@ async def test_ten_reqs_in_two_secs2(
     await function()
 
 
-class _Counter(object):
+class _Counter:
     def __init__(self) -> None:
         self.count = 0
 
