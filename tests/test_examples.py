@@ -53,7 +53,7 @@ async def _clear_redis(redis: AnyRedis) -> AsyncGenerator[None, None]:
     await redis.flushdb()
 
 
-@pytest.fixture()
+@pytest.fixture
 def limited(redis: AnyRedis) -> _LimitedCallback:
     """Fixture to construct rate limited functions."""
     def factory(

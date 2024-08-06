@@ -23,7 +23,7 @@ _LIMIT: Final = 5
 _SECONDS: Final = 1
 
 
-@pytest.fixture()
+@pytest.fixture
 def event_loop() -> asyncio.AbstractEventLoop:
     """Overriding `pytest-asyncio` fixture."""
     return _event_loop
