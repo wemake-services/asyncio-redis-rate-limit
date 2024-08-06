@@ -8,8 +8,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: test-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -50,8 +53,8 @@ jobs:
 
     - name: Pull and build docker-compose services
       run: |
-        docker-compose pull
-        docker-compose up --detach
+        docker compose pull
+        docker compose up --detach
       env:
         REDIS_IMAGE: ${{ matrix.redis-image }}
 
@@ -69,6 +72,6 @@ jobs:
     # Upload coverage to codecov: https://codecov.io/
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
-      if: ${{ matrix.python-version == '3.9' && matrix.env-type == 'dev' }}
+      if: ${{ matrix.python-version == '3.12' && matrix.env-type == 'dev' }}
       with:
         file: ./coverage.xml
