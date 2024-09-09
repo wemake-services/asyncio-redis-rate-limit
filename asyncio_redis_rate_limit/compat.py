@@ -44,8 +44,13 @@ def pipeline_expire(
     pipeline: Any,
     cache_key: str,
     seconds: int,
+    *,
+    use_nx: bool = True,
 ) -> AnyPipeline:
     """Compatibility mode for `.expire(..., nx=True)` command."""
+    if not use_nx:
+        return pipeline.expire(cache_key, seconds)   # type: ignore
+
     if isinstance(pipeline, _AsyncPipeline):
         return pipeline.expire(cache_key, seconds, nx=True)  # type: ignore
     # `aioredis` somehow does not have this boolean argument in `.expire`,
