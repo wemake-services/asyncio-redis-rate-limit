@@ -6,11 +6,7 @@ from typing import Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
 
 from typing_extensions import ParamSpec, TypeAlias, final
 
-from asyncio_redis_rate_limit.compat import (
-    AnyPipeline,
-    AnyRedis,
-    pipeline_expire,
-)
+from asyncio_redis_rate_limit.compat import AnyPipeline, AnyRedis
 
 #: These aliases makes our code more readable.
 _Seconds: TypeAlias = int
@@ -49,7 +45,6 @@ class RateLimiter:
         '_backend',
         '_cache_prefix',
         '_lock',
-        '_use_nx_on_expire'
     )
 
     def __init__(
@@ -59,7 +54,6 @@ class RateLimiter:
         backend: AnyRedis,
         *,
         cache_prefix: str,
-        use_nx_on_expire: bool = True,
     ) -> None:
         """In the future other backends might be supported as well."""
         self._unique_key = unique_key
@@ -67,7 +61,6 @@ class RateLimiter:
         self._backend = backend
         self._cache_prefix = cache_prefix
         self._lock = asyncio.Lock()
-        self._use_nx_on_expire = use_nx_on_expire
 
     async def __aenter__(self: _RateLimiterT) -> _RateLimiterT:
         """
@@ -109,12 +102,9 @@ class RateLimiter:
         pipeline: AnyPipeline,
     ) -> int:
         # https://redis.io/commands/incr/#pattern-rate-limiter-1
-        current_rate, _ = await pipeline_expire(
-            pipeline.incr(cache_key),
-            cache_key,
-            self._rate_spec.seconds,
-            use_nx=self._use_nx_on_expire,
-        ).execute()
+        _, current_rate = await pipeline.set(  # type: ignore[union-attr]
+            cache_key, 0, nx=True, ex=self._rate_spec.seconds,
+        ).incr(cache_key).execute()
         return current_rate  # type: ignore[no-any-return]
 
     def _make_cache_key(
@@ -134,7 +124,6 @@ def rate_limit(  # noqa: WPS320
     backend: AnyRedis,
     *,
     cache_prefix: str = 'aio-rate-limit',
-    use_nx_on_expire: bool = True,
 ) -> Callable[
     [_CoroutineFunction[_ParamsT, _ResultT]],
     _CoroutineFunction[_ParamsT, _ResultT],
@@ -172,7 +161,6 @@ def rate_limit(  # noqa: WPS320
                 backend=backend,
                 rate_spec=rate_spec,
                 cache_prefix=cache_prefix,
-                use_nx_on_expire=use_nx_on_expire,
             ):
                 return await function(*args, **kwargs)
         return factory

@@ -25,8 +25,6 @@ class _LimitedCallback(Protocol):
         self,
         requests: int = ...,
         seconds: int = ...,
-        *,
-        use_nx_on_expire: bool = ...,
     ) -> _LimitedSig:
         """We use this callback to construct `limited` test function."""
 
@@ -248,31 +246,6 @@ async def test_ten_reqs_in_two_secs2(
     await asyncio.sleep(1 + 0.5)
     await function()
 
-@pytest.mark.repeat(5)
-async def test_ten_reqs_in_two_secs_without_nx(
-    limited: _LimitedCallback,
-) -> None:
-    """Ensure that several gathered coroutines do respect the rate limit."""
-    function = limited(requests=10, seconds=2, use_nx_on_expire=False)
-
-    # Or just consume all:
-    for attempt in range(10):
-        await function(attempt)
-
-    # This one will fail:
-    with pytest.raises(RateLimitError):
-        await function()
-
-    # Now, let's move time to the next second:
-    await asyncio.sleep(1)
-
-    # This one will also fail:
-    with pytest.raises(RateLimitError):
-        await function()
-
-    # Next attempts will pass:
-    await asyncio.sleep(1 + 0.5)
-    await function()
 
 class _Counter:
     def __init__(self) -> None:

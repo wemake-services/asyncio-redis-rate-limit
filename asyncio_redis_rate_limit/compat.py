@@ -38,26 +38,3 @@ except ImportError:
 
 AnyPipeline: TypeAlias = Union['_AsyncPipeline[Any]', _AIOPipeline]
 AnyRedis: TypeAlias = Union['_AsyncRedis[Any]', _AIORedis]
-
-
-def pipeline_expire(
-    pipeline: Any,
-    cache_key: str,
-    seconds: int,
-    *,
-    use_nx: bool = True,
-) -> AnyPipeline:
-    """Compatibility mode for `.expire(..., nx=True)` command."""
-    if not use_nx:
-        return pipeline.expire(cache_key, seconds)   # type: ignore
-
-    if isinstance(pipeline, _AsyncPipeline):
-        return pipeline.expire(cache_key, seconds, nx=True)  # type: ignore
-    # `aioredis` somehow does not have this boolean argument in `.expire`,
-    # so, we use `EXPIRE` directly with `NX` flag.
-    return pipeline.execute_command(  # type: ignore
-        'EXPIRE',
-        cache_key,
-        seconds,
-        'NX',
-    )
