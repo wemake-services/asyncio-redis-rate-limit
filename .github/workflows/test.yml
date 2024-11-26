@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12']
-        redis-image: ['redis:7.0-alpine']
+        redis-image: ['redis:7.0-alpine', 'eqalpha/keydb:alpine']
         env-type: ['redis']
 
         include:
@@ -31,6 +31,13 @@ jobs:
           - python-version: '3.9'
             env-type: 'dev'
             redis-image: 'redis:7.0-alpine'
+          - python-version: '3.10'
+            env-type: 'aioredis'
+            redis-image: 'eqalpha/keydb:alpine'
+          - python-version: '3.9'
+            env-type: 'dev'
+            redis-image: 'eqalpha/keydb:alpine'
+
 
     steps:
     - uses: actions/checkout@v4

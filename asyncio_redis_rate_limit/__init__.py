@@ -6,11 +6,7 @@ from typing import Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
 
 from typing_extensions import ParamSpec, TypeAlias, final
 
-from asyncio_redis_rate_limit.compat import (
-    AnyPipeline,
-    AnyRedis,
-    pipeline_expire,
-)
+from asyncio_redis_rate_limit.compat import AnyPipeline, AnyRedis
 
 #: These aliases makes our code more readable.
 _Seconds: TypeAlias = int
@@ -106,11 +102,9 @@ class RateLimiter:
         pipeline: AnyPipeline,
     ) -> int:
         # https://redis.io/commands/incr/#pattern-rate-limiter-1
-        current_rate, _ = await pipeline_expire(
-            pipeline.incr(cache_key),
-            cache_key,
-            self._rate_spec.seconds,
-        ).execute()
+        _, current_rate = await pipeline.set(  # type: ignore[union-attr]
+            cache_key, 0, nx=True, ex=self._rate_spec.seconds,
+        ).incr(cache_key).execute()
         return current_rate  # type: ignore[no-any-return]
 
     def _make_cache_key(
