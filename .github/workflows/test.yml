@@ -20,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12']
-        redis-image: ['redis:7.0-alpine']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        redis-image: ['redis:7.4-alpine']
         env-type: ['redis']
 
         include:
