@@ -20,20 +20,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
-        redis-image: ['redis:7.4-alpine']
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+        redis-image: ['redis:7.4-alpine', 'redis:8.2-alpine']
         env-type: ['redis']
 
         include:
           - python-version: '3.10'
             env-type: 'aioredis'
             redis-image: 'redis:7.0-alpine'
-          - python-version: '3.9'
+          - python-version: '3.10'
             env-type: 'dev'
             redis-image: 'redis:7.0-alpine'
 
     steps:
     - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
@@ -43,7 +45,7 @@ jobs:
       run: |
         curl -sSL "https://install.python-poetry.org" | python
         # Adding `poetry` to `$PATH`:
-        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+        echo "$HOME/.poetry/bin" >> "$GITHUB_PATH"
 
     - name: Install dependencies
       run: |
@@ -72,6 +74,6 @@ jobs:
     # Upload coverage to codecov: https://codecov.io/
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
-      if: ${{ matrix.python-version == '3.12' && matrix.env-type == 'dev' }}
+      if: ${{ matrix.python-version == '3.10' && matrix.env-type == 'dev' }}
       with:
-        file: ./coverage.xml
+        files: ./coverage.xml

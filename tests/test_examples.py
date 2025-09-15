@@ -1,17 +1,18 @@
 import asyncio
 import os
-from typing import AsyncGenerator, Awaitable, cast
+from collections.abc import AsyncGenerator, Awaitable
+from typing import Final, cast
 
 import pytest
-from typing_extensions import Final, Protocol
+from typing_extensions import Protocol
 
 from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
-from asyncio_redis_rate_limit.compat import (  # type: ignore  # noqa: WPS450
+from asyncio_redis_rate_limit.compat import (  # type: ignore
     HAS_AIOREDIS,
     HAS_REDIS,
     AnyRedis,
-    _AIORedis,
-    _AsyncRedis,
+    _AIORedis,  # noqa: PLC2701
+    _AsyncRedis,  # noqa: PLC2701
 )
 
 
@@ -41,9 +42,12 @@ async def redis(request: pytest.FixtureRequest) -> AnyRedis:
     elif issubclass(request.param, _AIORedis) and not HAS_AIOREDIS:
         pytest.skip('`aioredis` is not installed')
 
-    return cast(AnyRedis, request.param.from_url(
-        'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
-    ))
+    return cast(
+        AnyRedis,
+        request.param.from_url(
+            'redis://{}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
+        ),
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -56,6 +60,7 @@ async def _clear_redis(redis: AnyRedis) -> AsyncGenerator[None, None]:
 @pytest.fixture
 def limited(redis: AnyRedis) -> _LimitedCallback:
     """Fixture to construct rate limited functions."""
+
     def factory(
         requests: int = _LIMIT,
         seconds: int = _SECONDS,
@@ -66,7 +71,9 @@ def limited(redis: AnyRedis) -> _LimitedCallback:
         )
         async def decorator(index: int = 0) -> int:
             return index
+
         return decorator  # type: ignore[return-value]
+
     return factory
 
 
@@ -81,16 +88,20 @@ async def test_correct(limited: _LimitedCallback) -> None:
     with pytest.raises(RateLimitError):
         await function()
 
+
 #: Freezing time on a client won't help, server's time is important.
 test_correct_frozen = pytest.mark.freeze_time('2020-02-03')(test_correct)
 
 
-@pytest.mark.parametrize(('limit', 'seconds'), [
-    (_LIMIT, _SECONDS),
-    (5, 2),
-    (3, 3),
-    (1, 2),
-])
+@pytest.mark.parametrize(
+    ('limit', 'seconds'),
+    [
+        (_LIMIT, _SECONDS),
+        (5, 2),
+        (3, 3),
+        (1, 2),
+    ],
+)
 async def test_with_sleep(
     limited: _LimitedCallback,
     limit: int,
@@ -117,6 +128,7 @@ async def test_different_functions(
     redis: AnyRedis,
 ) -> None:
     """Ensure that unrelated functions are unrelated."""
+
     @rate_limit(
         rate_spec=RateSpec(requests=5, seconds=1),
         backend=redis,
@@ -143,6 +155,7 @@ async def test_different_functions(
 
 async def test_different_prefixes(redis: AnyRedis) -> None:
     """Ensure that different prefixes work for the same function."""
+
     async def factory(index: int = 0) -> int:
         return index
 
@@ -180,8 +193,7 @@ async def test_gather_correct(limited: _LimitedCallback) -> None:
     function = limited()
 
     assert await asyncio.gather(*[
-        function(attempt)
-        for attempt in range(_LIMIT)
+        function(attempt) for attempt in range(_LIMIT)
     ]) == [0, 1, 2, 3, 4]
 
 
@@ -192,8 +204,7 @@ async def test_gather_limited(limited: _LimitedCallback) -> None:
 
     with pytest.raises(RateLimitError):
         await asyncio.gather(*[
-            function(attempt)
-            for attempt in range(_LIMIT + 1)
+            function(attempt) for attempt in range(_LIMIT + 1)
         ])
 
 

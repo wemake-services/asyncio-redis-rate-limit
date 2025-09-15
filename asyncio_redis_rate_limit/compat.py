@@ -1,6 +1,4 @@
-from typing import Any, Generic, TypeVar, Union
-
-from typing_extensions import TypeAlias
+from typing import Any, Generic, TypeAlias, TypeVar, Union
 
 _EmptyType = TypeVar('_EmptyType')
 
@@ -10,6 +8,7 @@ try:  # noqa: WPS229  # pragma: no cover
 
     HAS_REDIS = True
 except ImportError:
+
     class _AsyncPipeline(  # type: ignore  # noqa: WPS306, WPS440
         Generic[_EmptyType],
     ):
@@ -28,6 +27,7 @@ try:  # noqa: WPS229  # pragma: no cover
 
     HAS_AIOREDIS = True
 except ImportError:
+
     class _AIOPipeline:  # type: ignore  # noqa: WPS306, WPS440
         """Fallback pipeline type if `aioredis` is not installed."""
 

@@ -6,8 +6,13 @@ We follow [Semantic Versions](https://semver.org/).
 
 ### Features
 
-- *breaking*: Removes `python3.8` support
-- Adds `python3.12` support
+- *breaking*: Removes `python3.8` and `python3.9` support
+- Adds `python3.12` and `python3.13` support
+- Adds `redis:8` official support
+
+### Misc
+
+- Updates multiple deps
 
 
 ## Version 1.0.0
@@ -33,7 +38,7 @@ We follow [Semantic Versions](https://semver.org/).
 
 ### Misc
 
-- Fixes all names to `asyncio-redis-rate-limit` 
+- Fixes all names to `asyncio-redis-rate-limit`
   from `aio-redis-rate-limit` in docs
 
 

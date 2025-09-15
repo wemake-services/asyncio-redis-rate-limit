@@ -2,21 +2,21 @@ import asyncio
 import multiprocessing
 import os
 import time
+from typing import Final
 
 import pytest
-from typing_extensions import Final
 
 from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
-from asyncio_redis_rate_limit.compat import (  # type: ignore  # noqa: WPS450
+from asyncio_redis_rate_limit.compat import (  # type: ignore
     HAS_REDIS,
-    _AsyncRedis,
+    _AsyncRedis,  # noqa: PLC2701
 )
 
 if not HAS_REDIS:
     pytest.skip('`redis` package is not installed', allow_module_level=True)
 
 _redis: Final = _AsyncRedis.from_url(
-    'redis://{0}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
+    'redis://{}:6379'.format(os.environ.get('REDIS_HOST', 'localhost')),
 )
 _event_loop: Final = asyncio.new_event_loop()
 _LIMIT: Final = 5
@@ -50,6 +50,5 @@ def test_multiprocess(event_loop: asyncio.BaseEventLoop) -> None:
 
     time.sleep(_SECONDS)
 
-    with multiprocessing.Pool() as pool2:
-        with pytest.raises(RateLimitError):
-            pool2.map(_worker, list(range(_LIMIT + 1)))
+    with multiprocessing.Pool() as pool2, pytest.raises(RateLimitError):
+        pool2.map(_worker, list(range(_LIMIT + 1)))
