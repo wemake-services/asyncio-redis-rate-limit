@@ -38,7 +38,7 @@ We follow [Semantic Versions](https://semver.org/).
 
 ### Misc
 
-- Fixes all names to `asyncio-redis-rate-limit` 
+- Fixes all names to `asyncio-redis-rate-limit`
   from `aio-redis-rate-limit` in docs
 
 
