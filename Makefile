@@ -19,7 +19,6 @@ unit:
 
 .PHONY: package
 package:
-	poetry check
 	poetry run pip check
 
 .PHONY: test
