@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "asyncio-redis-rate-limit"
 description = "Rate limiter for async functions using Redis as a backend"
-version = "1.0.0"
+version = "1.1.0"
 license = "MIT"
 readme = "README.md"
 
