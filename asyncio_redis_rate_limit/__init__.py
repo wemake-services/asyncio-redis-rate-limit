@@ -1,10 +1,11 @@
 import asyncio
 import hashlib
+from collections.abc import Awaitable, Callable
 from functools import wraps
 from types import TracebackType
-from typing import Awaitable, Callable, NamedTuple, Optional, Type, TypeVar
+from typing import NamedTuple, TypeAlias, TypeVar
 
-from typing_extensions import ParamSpec, TypeAlias, final
+from typing_extensions import ParamSpec, final
 
 from asyncio_redis_rate_limit.compat import (
     AnyPipeline,
@@ -44,11 +45,11 @@ class RateLimiter:
     """Implements rate limiting."""
 
     __slots__ = (
-        '_unique_key',
-        '_rate_spec',
         '_backend',
         '_cache_prefix',
         '_lock',
+        '_rate_spec',
+        '_unique_key',
     )
 
     def __init__(
@@ -78,9 +79,9 @@ class RateLimiter:
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc: Optional[BaseException],
-        tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
     ) -> None:
         """Do nothing. We need this to ``__aenter__`` to work."""
 
@@ -120,9 +121,12 @@ class RateLimiter:
         cache_prefix: str,
     ) -> str:
         parts = ''.join([unique_key, str(rate_spec)])
-        return cache_prefix + hashlib.md5(  # noqa: S303, S324
-            parts.encode('utf-8'),
-        ).hexdigest()
+        return (
+            cache_prefix
+            + hashlib.md5(  # noqa: S324
+                parts.encode('utf-8'),
+            ).hexdigest()
+        )
 
 
 def rate_limit(  # noqa: WPS320
@@ -147,13 +151,13 @@ def rate_limit(  # noqa: WPS320
         >>> redis = AsyncRedis.from_url('redis://localhost:6379')
 
         >>> @rate_limit(
-        ...    rate_spec=RateSpec(requests=1200, seconds=60),
-        ...    backend=redis,
+        ...     rate_spec=RateSpec(requests=1200, seconds=60),
+        ...     backend=redis,
         ... )
-        ... async def request() -> int:
-        ...     ...   # Do something
+        ... async def request() -> int: ...  # Do something
 
     """
+
     def decorator(
         function: _CoroutineFunction[_ParamsT, _ResultT],
     ) -> _CoroutineFunction[_ParamsT, _ResultT]:
@@ -169,5 +173,7 @@ def rate_limit(  # noqa: WPS320
                 cache_prefix=cache_prefix,
             ):
                 return await function(*args, **kwargs)
+
         return factory
+
     return decorator

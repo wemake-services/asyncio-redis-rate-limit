@@ -1,9 +1,17 @@
 SHELL:=/usr/bin/env bash
 
+.PHONY: format
+format:
+	poetry run ruff format
+	poetry run ruff check
+
+
 .PHONY: lint
 lint:
-	poetry run mypy .
+	poetry run ruff check --exit-non-zero-on-fix
+	poetry run ruff format --check --diff
 	poetry run flake8 .
+	poetry run mypy .
 
 .PHONY: unit
 unit:
