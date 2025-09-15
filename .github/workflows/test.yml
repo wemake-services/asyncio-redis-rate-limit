@@ -34,6 +34,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
@@ -43,7 +45,7 @@ jobs:
       run: |
         curl -sSL "https://install.python-poetry.org" | python
         # Adding `poetry` to `$PATH`:
-        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+        echo "$HOME/.poetry/bin" >> "$GITHUB_PATH"
 
     - name: Install dependencies
       run: |
@@ -74,4 +76,4 @@ jobs:
       uses: codecov/codecov-action@v5
       if: ${{ matrix.python-version == '3.10' && matrix.env-type == 'dev' }}
       with:
-        file: ./coverage.xml
+        files: ./coverage.xml
