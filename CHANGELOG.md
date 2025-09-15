@@ -2,7 +2,7 @@
 
 We follow [Semantic Versions](https://semver.org/).
 
-## WIP
+## Version 1.1.0
 
 ### Features
 
