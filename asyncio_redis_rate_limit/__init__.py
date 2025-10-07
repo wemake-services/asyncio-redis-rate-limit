@@ -166,8 +166,9 @@ def rate_limit(  # noqa: WPS320
             *args: _ParamsT.args,
             **kwargs: _ParamsT.kwargs,
         ) -> _ResultT:
+            module_name = getattr(function, '__module__', '__missing_module__')
             async with RateLimiter(
-                unique_key=function.__qualname__,
+                unique_key=f'{module_name}.{function.__qualname__}',
                 backend=backend,
                 rate_spec=rate_spec,
                 cache_prefix=cache_prefix,
