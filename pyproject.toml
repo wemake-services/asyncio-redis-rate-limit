@@ -50,7 +50,7 @@ types-mock = "^5.0"
 wemake-python-styleguide = "^1.4"
 ruff = ">=0.13,<0.15"
 
-pytest = "^8.3"
+pytest = ">=8.3,<10.0"
 pytest-cov = "^7.0"
 pytest-randomly = "^4.0"
 pytest-asyncio = "^1.2"
