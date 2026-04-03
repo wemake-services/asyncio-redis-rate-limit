@@ -73,7 +73,7 @@ jobs:
 
     # Upload coverage to codecov: https://codecov.io/
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       if: ${{ matrix.python-version == '3.10' && matrix.env-type == 'dev' }}
       with:
         files: ./coverage.xml
