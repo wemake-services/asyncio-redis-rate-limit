@@ -967,14 +967,14 @@ types-setuptools = "*"
 
 [[package]]
 name = "types-mock"
-version = "5.2.0.20250924"
+version = "5.2.0.20260408"
 description = "Typing stubs for mock"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "types_mock-5.2.0.20250924-py3-none-any.whl", hash = "sha256:23617ffb4cf948c085db69ec90bd474afbce634ef74995045ae0a5748afbe57d"},
-    {file = "types_mock-5.2.0.20250924.tar.gz", hash = "sha256:953197543b4183f00363e8e626f6c7abea1a3f7a4dd69d199addb70b01b6bb35"},
+    {file = "types_mock-5.2.0.20260408-py3-none-any.whl", hash = "sha256:7754cdaadb81127124804acf2abea413705c1ac22f7bd2bd8417710d2e507216"},
+    {file = "types_mock-5.2.0.20260408.tar.gz", hash = "sha256:0bca3ca21943ba25bca6888b2383b91938f5978a189c840656e255073d53868d"},
 ]
 
 [[package]]
