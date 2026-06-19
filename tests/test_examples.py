@@ -50,7 +50,7 @@ async def redis(request: pytest.FixtureRequest) -> AnyRedis:
     )
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 async def _clear_redis(redis: AnyRedis) -> AsyncGenerator[None, None]:
     """This fixture is needed to be sure that test start with fresh redis."""
     yield
