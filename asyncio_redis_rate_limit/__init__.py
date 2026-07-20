@@ -123,7 +123,7 @@ class RateLimiter:
         parts = ''.join([unique_key, str(rate_spec)])
         return (
             cache_prefix
-            + hashlib.md5(  # noqa: S324
+            + hashlib.md5(  # ruff:ignore[hashlib-insecure-hash-function]
                 parts.encode('utf-8'),
             ).hexdigest()
         )

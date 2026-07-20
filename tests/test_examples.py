@@ -11,8 +11,8 @@ from asyncio_redis_rate_limit.compat import (  # type: ignore
     HAS_AIOREDIS,
     HAS_REDIS,
     AnyRedis,
-    _AIORedis,  # noqa: PLC2701
-    _AsyncRedis,  # noqa: PLC2701
+    _AIORedis,  # ruff:ignore[import-private-name]
+    _AsyncRedis,  # ruff:ignore[import-private-name]
 )
 
 

@@ -9,7 +9,7 @@ import pytest
 from asyncio_redis_rate_limit import RateLimitError, RateSpec, rate_limit
 from asyncio_redis_rate_limit.compat import (  # type: ignore
     HAS_AIOREDIS,
-    _AIORedis,  # noqa: PLC2701
+    _AIORedis,  # ruff:ignore[import-private-name]
 )
 
 if not HAS_AIOREDIS:
