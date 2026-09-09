@@ -52,7 +52,7 @@ ruff = "^0.16"
 
 pytest = ">=8.3,<10.0"
 pytest-cov = "^7.0"
-pytest-randomly = "^4.0"
+pytest-randomly = ">=4,<6"
 pytest-asyncio = "^1.2"
 pytest-freezegun = "^0.4"
 pytest-repeat = "^0.9"
