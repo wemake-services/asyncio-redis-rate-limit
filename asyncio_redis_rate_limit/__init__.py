@@ -1,4 +1,3 @@
-import asyncio
 import hashlib
 from collections.abc import Awaitable, Callable
 from functools import wraps
@@ -47,7 +46,6 @@ class RateLimiter:
     __slots__ = (
         '_backend',
         '_cache_prefix',
-        '_lock',
         '_rate_spec',
         '_unique_key',
     )
@@ -65,7 +63,6 @@ class RateLimiter:
         self._rate_spec = rate_spec
         self._backend = backend
         self._cache_prefix = cache_prefix
-        self._lock = asyncio.Lock()
 
     async def __aenter__(self: _RateLimiterT) -> _RateLimiterT:
         """
@@ -95,11 +92,15 @@ class RateLimiter:
         )
         pipeline = self._backend.pipeline()
 
-        async with self._lock:
-            current_rate = await self._run_pipeline(cache_key, pipeline)
-            # This looks like a coverage error on 3.10:
-            if current_rate > self._rate_spec.requests:  # pragma: no cover
-                raise RateLimitError('Rate limit is hit', current_rate)
+        # `pipeline()` defaults to `transaction=True`, so redis itself
+        # atomically serializes the incr+expire below: a per-instance
+        # `asyncio.Lock` here would not add any safety (a fresh `RateLimiter`,
+        # and thus a fresh lock, is created on every call, so it can never be
+        # contended) while still costing an allocation on every call.
+        current_rate = await self._run_pipeline(cache_key, pipeline)
+        # This looks like a coverage error on 3.10:
+        if current_rate > self._rate_spec.requests:  # pragma: no cover
+            raise RateLimitError('Rate limit is hit', current_rate)
 
     async def _run_pipeline(
         self,
