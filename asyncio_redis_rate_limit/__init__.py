@@ -14,7 +14,6 @@ from asyncio_redis_rate_limit.compat import (
 )
 
 _Seconds: TypeAlias = int
-"""These aliases makes our code more readable."""
 
 _ResultT = TypeVar('_ResultT')
 _ParamsT = ParamSpec('_ParamsT')
