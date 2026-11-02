@@ -13,7 +13,6 @@ from asyncio_redis_rate_limit.compat import (
     pipeline_expire,
 )
 
-#: These aliases makes our code more readable.
 _Seconds: TypeAlias = int
 
 _ResultT = TypeVar('_ResultT')
